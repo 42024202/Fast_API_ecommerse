@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class ProductBase(BaseModel):
@@ -13,5 +13,6 @@ class ProductCreate(ProductBase):
     pass
 
 class ProductOut(ProductBase):
+    model_config = ConfigDict(from_attributes=True)
     """Class for output product."""
     id: int

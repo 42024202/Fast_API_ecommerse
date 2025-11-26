@@ -1,8 +1,8 @@
 from contextlib import asynccontextmanager
-from typing import Annotated
 from fastapi import FastAPI, Path
 from .core import db_helper, Base
-from .product.models.product import Product
+from core.config import settings
+from .api.v1.routers import router as router_v1
 
 
 @asynccontextmanager
@@ -13,10 +13,5 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-
-@app.get("/")
-def hello_world():
-    return {
-        "message": "world",
-            }
+app.include_router(router_v1, prefix=f"{settings.api_v1_prefix}")
 

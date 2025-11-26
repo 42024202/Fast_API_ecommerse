@@ -5,7 +5,7 @@ from ..models.product import Product
 from ..schemas.schema_v1 import ProductCreate
 
 
-async def create_product(session: AsyncSession, product_in:ProductCreate) -> Product:
+async def create_product(product_in:ProductCreate, session:AsyncSession) -> Product:
     """Create product"""
     product = Product(**product_in.model_dump())
     session.add(product)
