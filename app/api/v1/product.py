@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.product.models.product import Product
-from app.product.views import ProductServiceV1
+from app.product.services import ProductServiceV1
 from app.core.db_helpers import db_helper
 from app.product.schemas.schema_v1 import ProductCreate, ProductOut, ProductUpdate
 from app.product.dependencies import get_product_or_404

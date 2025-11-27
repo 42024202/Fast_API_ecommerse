@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, status, Path
 from app.core.db_helpers import db_helper
-from app.product.views import ProductServiceV1
+from app.product.services import ProductServiceV1
 from app.product.models import Product
 from typing import Annotated
 
