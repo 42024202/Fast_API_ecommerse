@@ -18,9 +18,9 @@ class ProductServiceV1:
     async def create_product(self, session: AsyncSession, product_in: ProductCreate):
         return await create_product(product_in, session)
 
-    async def patch_product(self, session: AsyncSession, product_update: ProductUpdate, product: Product):
-        return await patch_product(session, product_update, product)
+    async def update_product_part(self, session: AsyncSession, product: Product, product_update: ProductUpdate):
+        return await patch_product(session=session, product=product, product_update=product_update)
 
-    async def delete_product(self, session: AsyncSession, product: Product):
+    async def remove_product(self, session: AsyncSession, product: Product):
         return await delete_product(session, product)
 

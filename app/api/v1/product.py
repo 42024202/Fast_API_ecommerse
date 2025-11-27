@@ -1,9 +1,13 @@
 from fastapi import APIRouter
-from ...product.views import ProductServiceV1
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
+
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.product.models.product import Product
+from app.product.views import ProductServiceV1
 from app.core.db_helpers import db_helper
-from app.product.schemas.schema_v1 import ProductCreate, ProductOut
+from app.product.schemas.schema_v1 import ProductCreate, ProductOut, ProductUpdate
+from app.product.dependencies import get_product_or_404
 
 
 router = APIRouter(prefix="/products", tags=["Product"])
@@ -18,14 +22,7 @@ async def get_products(session: AsyncSession = Depends(db_helper.scoped_session_
 
 
 @router.get("/{id}/", response_model=ProductOut)
-async def get_product(id: int, session: AsyncSession = Depends(db_helper.scoped_session_dependancy)):
-    """GET product by id"""
-    product = await product_service.get_product(session, id)
-    if not product:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Product {id} not found"
-        )
+async def get_product(product:Product = Depends(get_product_or_404),):
     return product
 
 
@@ -37,3 +34,19 @@ async def create_product(
     """CREATE product"""
     return await product_service.create_product(session, product_in)
 
+
+@router.patch("/update/{id}/")
+async def update_product(
+        product_update: ProductUpdate,
+        product: Product = Depends(get_product_or_404),
+        session: AsyncSession = Depends(db_helper.scoped_session_dependancy),
+        ):
+    return await product_service.update_product_part(session=session, product=product, product_update=product_update)
+
+
+@router.delete("/delete/{id}/", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_product(
+        product: Product = Depends(get_product_or_404),
+        session: AsyncSession = Depends(db_helper.scoped_session_dependancy),
+        ) -> None:
+    await product_service.remove_product(session, product)
