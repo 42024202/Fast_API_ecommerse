@@ -1,4 +1,4 @@
-from app.core.models import Base
+from app.core import Base
 from sqlalchemy.orm import Mapped
 from app.mixins.id_pk_mixin import IdPkMixin
 
