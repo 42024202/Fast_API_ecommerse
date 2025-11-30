@@ -2,6 +2,8 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, asyn
 from .config import settings
 from sqlalchemy.orm import session, sessionmaker
 from asyncio import current_task
+from app.user.models.user import User
+from fastapi_users.db import SQLAlchemyUserDatabase
 
 
 class DatabaseHelper:
@@ -18,6 +20,7 @@ class DatabaseHelper:
                     expire_on_commit=False
                 )
 
+
     def get_scoped_session(self):
         session = async_scoped_session(
                 session_factory=self.session_factory,
@@ -25,10 +28,16 @@ class DatabaseHelper:
                 )
         return session
 
+
+    async def user_db_depandancy(self):
+        async with self.session_factory() as session:
+            yield SQLAlchemyUserDatabase(session, User)
+
+
     async def session_dependancy(self):
         async with self.session_factory() as session:
             yield session
-            await session.close()
+
 
     async def scoped_session_dependancy(self):
         session = self.get_scoped_session()

@@ -8,9 +8,10 @@ class Settings(BaseSettings):
     db_url: str = f"sqlite+aiosqlite:///{BASE_DIR}/db.sqlite3"
     db_echo: bool = True
     secret_key: str
+    jwt_lifetime:int = 3600
 
     class Config:
-        env_file = "../../.env"
+        env_file = f"{BASE_DIR}/.env"
 
 settings = Settings()
 
