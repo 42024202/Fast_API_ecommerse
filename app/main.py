@@ -73,14 +73,14 @@ app.include_router(phone_router, prefix=f"{settings.api_v1_prefix}")
 
 
 """Phone characters router"""
-app.include_router(battery_router, prefix=f"{settings.api_v1_prefix}/phone")
+app.include_router(battery_router, prefix=f"{settings.api_v1_prefix}")
 
-app.include_router(model_router, prefix=f"{settings.api_v1_prefix}/phone")
+app.include_router(model_router, prefix=f"{settings.api_v1_prefix}")
 
-app.include_router(screen_router, prefix=f"{settings.api_v1_prefix}/phone")
+app.include_router(screen_router, prefix=f"{settings.api_v1_prefix}")
 
-app.include_router(storage_router, prefix=f"{settings.api_v1_prefix}/phone")
+app.include_router(storage_router, prefix=f"{settings.api_v1_prefix}")
 
-app.include_router(brand_router, prefix=f"{settings.api_v1_prefix}/phone")
+app.include_router(brand_router, prefix=f"{settings.api_v1_prefix}")
 
-app.include_router(country_router, prefix=f"{settings.api_v1_prefix}/phone")
+app.include_router(country_router, prefix=f"{settings.api_v1_prefix}")
