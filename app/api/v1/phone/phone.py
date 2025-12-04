@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db_helpers import db_helper
-from app.phone.schemas_v1.phone import PhoneCreate, PhoneOut, PhoneUpdate
+from app.phone.schemas_v1.phone import PhoneCreate, PhoneOut, PhoneUpdate, PhoneFilter
 from app.phone.dependencies import get_phone_or_404
 
 
@@ -65,3 +65,10 @@ async def delete_phone(
     await phone_service.delete_phone(session, phone.id)
     return None
 
+
+@router.get("/", response_model=list[PhoneOut])
+async def list_phones(
+    filters: PhoneFilter = Depends(),
+    session: AsyncSession = Depends(db_helper.scoped_session_dependancy),):
+
+    return await phone_service.filter_phones(session, filters)
