@@ -1,5 +1,6 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, and_, or_
 
 from app.phone.crud.phone_crud import PhoneCRUD
 from app.phone.schemas_v1.phone import PhoneCreate, PhoneUpdate
@@ -71,6 +72,64 @@ class PhoneService:
 
         await self.crud.delete_phone(session, phone)
         return {"detail": "Phone deleted"}
+
+
+    async def filter_phones(self, session: AsyncSession, filters):
+        query = select(Phone)
+        conditions = []
+        
+        """brand"""
+        if filters.brand_id:
+            conditions.append(Phone.brand_id == filters.brand_id)
+
+        """model"""
+        if filters.model_id:
+            conditions.append(Phone.model_id == filters.model_id)
+
+        """price range"""
+        if filters.price_from:
+            conditions.append(Phone.price >= filters.price_from)
+
+        if filters.price_to:
+            conditions.append(Phone.price <= filters.price_to)
+
+        """ram"""
+        if filters.ram_from:
+            conditions.append(Phone.ram >= filters.ram_from)
+
+        if filters.ram_to:
+            conditions.append(Phone.ram <= filters.ram_to)
+
+        """storage"""
+        if filters.storage_id:
+            conditions.append(Phone.storage_id == filters.storage_id)
+
+        """condition"""
+        if filters.condition:
+            conditions.append(Phone.condition == filters.condition)
+
+        """year range"""
+        if filters.release_year_from:
+            conditions.append(Phone.release_year >= filters.release_year_from)
+
+        if filters.release_year_to:
+            conditions.append(Phone.release_year <= filters.release_year_to)
+
+        """full text search"""
+        if filters.search:
+            conditions.append(
+                or_(
+                    Phone.cpu.ilike(f"%{filters.search}%"),
+                    Phone.gpu.ilike(f"%{filters.search}%"),
+                    Phone.description.ilike(f"%{filters.search}%"),
+                )
+            )
+
+        if conditions:
+            query = query.where(and_(*conditions))
+
+        result = await session.execute(query)
+        return result.scalars().all()
 
 
 phone_service = PhoneService(PhoneCRUD())
