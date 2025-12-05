@@ -3,6 +3,8 @@ from logging.config import fileConfig
 from app.user.models import User
 from app.phone.models import Phone, PhoneImage, Battery, Brand, CountryOfOrigin, Model, PhoneScreen, Storage
 
+from app.stock.models import Color, Stock
+
 
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection

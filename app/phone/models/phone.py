@@ -104,3 +104,8 @@ class Phone(Base, IdPkMixin, TimestampMixin):
         back_populates="phones"
         )
 
+    stocks = relationship(
+        "Stock",
+        back_populates="phone",
+        cascade="all, delete-orphan")
+
